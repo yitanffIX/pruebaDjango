@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <title>Productos</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row m-3">
+            <h1 class="col-10">Listado de Productos</h1>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#storeModal">Agregar Producto</button>
+        </div>
+        <table class="table table-bordered table-striped text-center">
+            <thead class="bg-danger text-white">
+                <tr>
+                    <td>Nombre</td>
+                    <td>Precio</td>
+                    <td>Stock</td>
+                    <td>Acciones</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#updateModal{{ product.id }}">Editar</button>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#deleteModal{{ product.id }}">Eliminar</button>
+                    </td>
+                </tr>
+                <!-- Update Modal -->
+                <div class="modal fade" id="updateModal{{ product.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title" id="exampleModalLabel">Actualizar Producto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'update_product' product.id %}" class="form-group" method="POST">
+                                    {% csrf_token %}
+                                    <label for="name">Nombre:</label>
+                                    <input type="text" name="name" class="form-control mb-3"
+                                        placeholder="Ingrese el nombre..." value="{{ product.name }}" required>
+                                    <label for="price">Precio:</label>
+                                    <input type="number" name="price" class="form-control mb-3"
+                                        placeholder="Ingrese el precio..." value="{{ product.price }}" required>
+                                    <label for="stock">Existencias:</label>
+                                    <input type="number" name="stock" class="form-control mb-3"
+                                        placeholder="Ingrese las existencias..." value="{{ product.stock }}" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-success">Actualizar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title" id="exampleModalLabel">Eliminar Producto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                               <p>Se eliminara el producto <strong>{{ product.name }}</strong></p>
+                               <p>¿Estas seguro/a?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                <a href="{% url 'delete_product' product.id %}" class="btn btn-warning">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Store Modal -->
+    <div class="modal fade" id="storeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'store_product' %}" class="form-group" method="POST">
+                        {% csrf_token %}
+                        <label for="name">Nombre:</label>
+                        <input type="text" name="name" class="form-control mb-3" placeholder="Ingrese el nombre..."
+                            required>
+                        <label for="price">Precio:</label>
+                        <input type="number" name="price" class="form-control mb-3" placeholder="Ingrese el precio..."
+                            required>
+                        <label for="stock">Existencias:</label>
+                        <input type="number" name="stock" class="form-control mb-3"
+                            placeholder="Ingrese las existencias..." required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
