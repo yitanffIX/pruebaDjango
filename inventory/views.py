@@ -50,15 +50,42 @@ def list_category(request):
     return render(request, 'category.html', {'categories':categories})
 
 #Crear categoria
-def category_create(request):
-    pass
+def create_category(request):
+    # Recuperar los datos de los input
+    name = request.POST["name"]
+    description= request.POST["description"]
+    #stock = request.POST["stock"]
+    # Instanciar el nuevo objeto
+    new_category = Category(name=name, description=description) 
+    # Guardar el producto en la BD
+    new_category.save()
+    # Redireccionar al usuario 
+    return redirect('/category')
 
 
 #Actualizar las categorias
 def update_category(request):
-    pass
+    #Recuperar los datos del input
+    name = request.POST["name"]
+    description = request.POST["description"]
+    
+    #Instanciar a la nueva categoria
+    category = Category.objects.get(pk=id)
+    
+    category.name = name
+    category.description = description
+    
+    # Guardar los cambios en la BD
+    category.save()
+    # Redireccionar al usuario
+    return redirect('/category')    
 
 
 #Eliminar Categoria
 def delete_category(request):
-    pass
+    # Recuperar categoria
+    category = Category.objects.get(pk=id)
+    # Eliminarlo
+    category.delete()
+    # Redireccionar al usuario
+    return redirect('/category')
