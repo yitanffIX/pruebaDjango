@@ -44,11 +44,21 @@ def delete_product(request, id):
     # Redireccionar al usuario
     return redirect('/productos')
 
-#Defino Categoria
+#Defino Categoria y listo las categorias
 def list_category(request):
     categories = Category.objects.all()
     return render(request, 'category.html', {'categories':categories})
 
 #Crear categoria
 def category_create(request):
-    
+    pass
+
+
+#Actualizar las categorias
+def update_category(request):
+    pass
+
+
+#Eliminar Categoria
+def delete_category(request):
+    pass
